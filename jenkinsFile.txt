@@ -1,0 +1,65 @@
+pipeline {
+    agent any
+    tools {
+        maven "Maven 3.9.3"
+        jdk "Java 17"
+    }
+    stages {
+        stage('Construcción') {
+            steps {
+                git branch: 'main', url: 'https://github.com/RodStazzi/PruebaPracticaModulo4'
+                bat "mvn clean package -DskipTests"
+            }
+            post {
+                success {
+                    echo 'Archivando artefactos'
+                    archiveArtifacts 'target/*.jar'
+                }
+            }
+        }
+        stage('Pruebas Unitarias') {
+            steps {
+                bat "mvn test"
+                bat "dir target\\surefire-reports\\*" // Verificar generación de reportes
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                    script {
+                        def testResults = junit 'target/surefire-reports/*.xml'
+                        def totalTests = testResults.totalCount
+                        def failedTests = testResults.failCount
+                        def passedTests = totalTests - failedTests
+                        slackSend channel: '#devops-jenkins-integracion',
+                                  color: failedTests == 0 ? 'good' : 'danger',
+                                  message: "Resultados de las pruebas unitarias:\n" +
+                                           "Total: ${totalTests}\n" +
+                                           "Pasadas: ${passedTests}\n" +
+                                           "Fallidas: ${failedTests}\n" +
+                                           "Más información en: ${env.BUILD_URL}"
+                    }
+                }
+            }
+        }
+        stage('Cobertura de Código') {
+            steps {
+                // Ejecutar JaCoCo para generar el informe de cobertura
+                bat "mvn jacoco:report"
+            }
+            post {
+                success {
+                    // Publicar los informes de cobertura
+                    publishHTML(target: [
+                        allowMissing: false,
+                        alwaysLinkToLastBuild: true,
+                        keepAll: true,
+                        reportDir: 'target/site/jacoco',
+                        reportFiles: 'index.html',
+                        reportName: 'Informe de Cobertura JaCoCo'
+                    ])
+                }
+            }
+        }
+    }
+}
+
