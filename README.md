@@ -57,3 +57,11 @@ Se puede implementar pruebas funcionales en el ciclo de integración continua ut
     Integrar Selenium con Jenkins: Se puede configurar Jenkins para que ejecute las pruebas funcionales de Selenium de forma automatizada en cada compilación del ciclo de integración continua. Para ello, se puede agregar un paso de compilación en Jenkins que ejecute las pruebas funcionales.
     Ejecutar las pruebas: Una vez configurado, Jenkins ejecutará automáticamente las pruebas funcionales de Selenium en cada compilación del ciclo de integración continua. Los resultados de las pruebas se pueden visualizar en Jenkins y se pueden configurar para recibir notificaciones de los resultados de las pruebas
 
+
+
+<a href="https://docs.google.com/presentation/d/1agx18rHBf45_Y1wC5VyOzNwj6V1KAqlFDg2Zpc1sJLw/edit#slide=id.g2f6e889b703_0_38" target="_blank">
+  <img src="https://img.shields.io/badge/RESPUESTAS-aqui-color.svg" alt="RESPUESTAS" style="height: 40px;">
+</a>
+
+
+
